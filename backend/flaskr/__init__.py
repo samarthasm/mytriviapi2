@@ -13,7 +13,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
 #----------------------------------------------------------------------------#
-# App Setup
+# This is for the App Setup
 #----------------------------------------------------------------------------#
 
 def create_app(test_config=None):
@@ -36,6 +36,11 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-Credentials', 'true')
         return response
 
+# ---------------------------------------------
+# This is an endpoint to handle GET requests
+# for all the categories available for trivia.
+# ---------------------------------------------
+
     @app.route("/categories", methods=["GET"])
     def category():
 
@@ -55,8 +60,20 @@ def create_app(test_config=None):
         except Exception as e:
             print(e)
             return abort(500, 'Something went wrong')
+# ----------------------------------------------------------------------
+# This is an endpoint is setup to handle GET requests for questions,
+# including pagination, it should return a list of questions along with
+# number of total questions, current category, categories.
+# ----------------------------------------------------------------------
 
-@app.route("/questions", methods=["GET"])
+# ----------------------------------------------------------------------------
+# TEST: At this point in time, when you start the application
+# you should see questions and categories generated, ten
+# questions per page and pagination at the bottom of the screen for 3 pages.
+# When you click on the page numbers, the new set of questions should appear.
+#-----------------------------------------------------------------------------
+
+    @app.route("/questions", methods=["GET"])
     def question():
         try:
             page_no = int(request.args['page'])
@@ -98,7 +115,14 @@ def create_app(test_config=None):
             filtered_questions[0]['category'])]
 
         return jsonify(response)
-    
+
+# -----------------------------------------------------------------------
+# This is an endpoint to DELETE questions with the help of a question ID.
+# -----------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------
+# TEST: When you click on the trash icon that is placed next to a question, the question
+# will be trashed or removed. This removal will reflect in the database and when you refresh the page.
+#------------------------------------------------------------------------------------------------------
     @app.route("/questions/<int:question_id>", methods=["DELETE"])
     def delete(question_id):
         question = Question.query.filter(
@@ -110,7 +134,15 @@ def create_app(test_config=None):
         else:
             question.delete()
             return jsonify({'success': True})
-    
+
+# ------------------------------------------------------------------
+# This is an endpoint to POST or add a new question that takes in the 
+# question and answer texts along with category, and difficulty score.
+# ---------------------------------------------------------------------------
+# TEST: When you submit a question on the "Add" tab,
+# the form will clear and the newly added question will appear at the end of 
+# the last page of questions under the "List" tab.
+#----------------------------------------------------------------------------
     @app.route("/questions", methods=["POST"])
     def post():
 
@@ -139,12 +171,17 @@ def create_app(test_config=None):
             return jsonify({'success': True})
         except:
             return abort(500)
-    
+
+# ---------------------------------------------------------------------------
+# This is A POST endpoint to get questions based on a searched term or sting.
+# It should return any and all questions of which the searched term
+# is a substring of.
+# --------------------------------------------------------------------------
+
     @app.route("/questions/search", methods=["POST"])
     def search():
-
-        questions = Question.query.filter(Question.question.ilike(
-            "%{}%".format(request.json['searchTerm']))).all()
+        
+        questions = Question.query.filter(Question.name.ilike("%{}%".format(request.json['searchTerm']))).all()
 
         if len(questions) == 0:
             return abort(404)
@@ -176,7 +213,11 @@ def create_app(test_config=None):
         response['current_category'] = current_category.type
 
         return jsonify(response)
-    
+
+    # ------------------------------------------------------------------
+    # A GET endpoint to get questions based on category.
+    # ------------------------------------------------------------------
+
     @app.route("/categories/<int:category_id>/questions")
     def category_wise_questions(category_id):
 
@@ -212,7 +253,12 @@ def create_app(test_config=None):
         response['current_category'] = current_category.type
 
         return jsonify(response)
-    
+
+    # Create a POST endpoint to get questions to play the quiz.
+    # This endpoint should take category and previous question parameters
+    # and return a random questions within the given category,
+    # if provided, and that is not one of the previous questions.
+
     @app.route("/quizzes", methods=["POST"])
     def quiz():
 
@@ -232,7 +278,7 @@ def create_app(test_config=None):
         if len(available_questions) == 0:
             return jsonify({"question":False, "success": True})
 
-        next_question = available_questions[randrange(len(available_questions))]
+        next_question = available_questions[random.randrange(len(available_questions))]
 
         return jsonify({"question":next_question.format(), "success": True})
     
@@ -260,8 +306,4 @@ def create_app(test_config=None):
             "message": "Internal Server Error"
         }), 500
 
-
-    
-
     return app
-
