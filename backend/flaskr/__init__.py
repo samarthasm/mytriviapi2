@@ -181,7 +181,7 @@ def create_app(test_config=None):
     @app.route("/questions/search", methods=["POST"])
     def search():
         
-        questions = Question.query.filter(Question.name.ilike("%{}%".format(request.json['searchTerm']))).all()
+        questions = Question.query.filter(Question.question.ilike("%{}%".format(request.json['searchTerm']))).all()
 
         if len(questions) == 0:
             return abort(404)
