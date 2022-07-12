@@ -214,9 +214,9 @@ def create_app(test_config=None):
 
         return jsonify(response)
 
-    # ------------------------------------------------------------------
-    # A GET endpoint to get questions based on category.
-    # ------------------------------------------------------------------
+# --------------------------------------------------------------------
+# This is a GET endpoint to get questions based on a chosen category.
+# --------------------------------------------------------------------
 
     @app.route("/categories/<int:category_id>/questions")
     def category_wise_questions(category_id):
@@ -254,10 +254,11 @@ def create_app(test_config=None):
 
         return jsonify(response)
 
-    # Create a POST endpoint to get questions to play the quiz.
-    # This endpoint should take category and previous question parameters
-    # and return a random questions within the given category,
-    # if provided, and that is not one of the previous questions.
+#-----------------------------------------------------------------------------------------------
+# This is a POST endpoint to get questions in order to play the quiz. It should 
+# take category and previous question parameters and return a random question
+# that is not one of the previous questions and within the given category, if that is provided.
+#-----------------------------------------------------------------------------------------------
 
     @app.route("/quizzes", methods=["POST"])
     def quiz():
