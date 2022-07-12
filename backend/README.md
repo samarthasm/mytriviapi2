@@ -75,7 +75,7 @@ You will need to provide detailed documentation of your API endpoints including 
 
 `GET '/api/v1.0/categories'`
 
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
+- This fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
 - Request Arguments: None
 - Returns: An object with a single key, `categories`, that contains an object of `id: category_string` key: value pairs.
 
@@ -87,6 +87,158 @@ You will need to provide detailed documentation of your API endpoints including 
   "4": "History",
   "5": "Entertainment",
   "6": "Sports"
+}
+```
+
+`GET '/api/v1.0/questions?page=1'`
+
+- This fetches questions as per given query parameter of page number
+- Request Arguments:
+  - page : positive integer
+- Returns: An object with a list of questions, number of total questions, the current category, all categories.
+- Sample Response:
+```json
+{
+    "categories": {
+        "1": "Science",
+        "2": "Art",
+        "3": "Geography",
+        "4": "History",
+        "5": "Entertainment",
+        "6": "Sports"
+    },
+    "current_category": "Science",
+    "questions": [
+        {
+            "answer": "Sir Isaac Newton",
+            "category": 1,
+            "difficulty": 1,
+            "id": 5,
+            "question": "The concept of gravity was discovered by which famous physicist?"
+        },
+        {
+            "answer": "206",
+            "category": 1,
+            "difficulty": 2,
+            "id": 9,
+            "question": "How many bones are in the human body?"
+        },
+        {
+            "answer": "1789",
+            "category": 4,
+            "difficulty": 4,
+            "id": 2,
+            "question": "What year did the French Revolution start?"
+        },
+        {
+            "answer": "Neil Armstrong",
+            "category": 4,
+            "difficulty": 3,
+            "id": 4,
+            "question": "Who was the first person in the world to land on the moon?"
+        },
+        {
+            "answer": "Mount Everest",
+            "category": 3,
+            "difficulty": 1,
+            "id": 6,
+            "question": "Which is the tallest mountain in the world?"
+        },
+        {
+            "answer": "Tributaries",
+            "category": 3,
+            "difficulty": 3,
+            "id": 10,
+            "question": "What are the branches of a river called?"
+        },
+        {
+            "answer": "Louvre",
+            "category": 2,
+            "difficulty": 1,
+            "id": 11,
+            "question": "Where can you see the Mona Lisa?"
+        },
+        {
+            "answer": "Spain",
+            "category": 2,
+            "difficulty": 3,
+            "id": 12,
+            "question": "Which country did the famous painter Pablo Picasso belong to?"
+        },
+        {
+            "answer": "Mysuru",
+            "category": 2,
+            "difficulty": 4,
+            "id": 13,
+            "question": "In which city is the famous painting 'Lady with the Lamp' or 'Glow of Hope' currently stored at?"
+        },
+        {
+            "answer": "Kolar Gold Fields",
+            "category": 5,
+            "difficulty": 3,
+            "id": 14,
+            "question": "What is the full form of the famous India movie named 'KGF'?"
+        }
+    ],
+    "success": true,
+    "total_questions": 16
+}
+```
+
+`DELETE '/api/v1.0/questions/20'`
+
+- A DELETE request to delete the question with id = 4 in above example
+- Request Arguments: None
+- Returns an object with success property as True or False
+- Sample Success Response:
+```json
+{
+    "success": true
+}
+```
+
+`POST '/api/v1.0/questions'`
+
+- A POST request to post a question into the Trivia DB
+- Request Arguments: None
+- Request Body Example
+```json
+{
+    "question": "Who won the most Grand Slam Tournaments in Men's Singles category?",
+    "answer": "Rafael Nadal",
+    "difficulty": 2,
+    "category": 6
+}
+```
+- Sample Response object
+```json
+{
+    "success": true
+}
+```
+
+`POST '/api/v1.0/quizzes'`
+- A POST request to play quiz in the Trivia App given previous questions and category being played
+- Returns a random question in the playing category (if any) which is not in the list of previous questions
+- Request Arguments: None
+- Request Body Example
+```json
+{
+    "previous_questions":[6, 4],
+    "quiz_category": {"type": "Geography", "id": "6"}
+}
+
+- Sample Response Object
+```json
+{
+    "question": {
+        "answer": "Mount Everest",
+        "category": 3,
+        "difficulty": 2,
+        "id": 13,
+        "question": "Which is the tallest mountain in the world?"
+    },
+    "success": true
 }
 ```
 
